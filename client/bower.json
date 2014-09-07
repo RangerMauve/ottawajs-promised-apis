@@ -1,0 +1,27 @@
+{
+  "name": "client",
+  "main": "index.js",
+  "version": "0.0.0",
+  "homepage": "https://github.com/RangerMauve/ottawajs-promised-apis",
+  "authors": [
+    "RangerMauve <RangerMauve@htomail.com>"
+  ],
+  "description": "Client packages for the presentation",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "superagent": "~0.18.2",
+    "es6-promise": "~1.0.0",
+    "mustache.js": "~0.8.2"
+  }
+}
