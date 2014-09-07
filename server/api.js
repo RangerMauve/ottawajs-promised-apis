@@ -144,7 +144,7 @@ comments.update = function(id, content) {
 	})
 }
 
-comments.destroy = function(id) {
+comments.delete = function(id) {
 	return new Promise(function(resolve, reject) {
 		Comments.remove({
 			_id: id
@@ -155,7 +155,7 @@ comments.destroy = function(id) {
 	})
 }
 
-comments.destroy.from = function(thread) {
+comments.delete.from = function(thread) {
 	return new Promise(function(resolve, reject) {
 		Comments.remove({
 			thread: thread

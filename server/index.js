@@ -13,7 +13,7 @@ app.get("/thread/list", bind_api(api.threads.list));
 app.get("/thread/list/:page", bind_api(api.threads.list));
 app.get("/thread/:id", bind_api(api.threads.read));
 app.get("/thread/:id/full", bind_api(api.threads.read.full));
-app.post("/thread", bind_api(api.threads.create));
+app.post("/thread", bind_api(api.threads.create));tee
 app.delete("/thread/:id", bind_api(api.threads.delete));
 
 app.get("/thread/:thread/comments", bind_api(api.comments.list));
@@ -21,7 +21,7 @@ app.get("/thread/:thread/comments/:page", bind_api(api.comments.list));
 app.get("/comment/:id", bind_api(api.comments.read));
 app.post("/thread/:thread/comments", bind_api(api.comments.create));
 app.put("/comment/:id", bind_api(api.comments.update));
-app.delete("/comment/:id", bind_api(api.comments.destroy));
+app.delete("/comment/:id", bind_api(api.comments.delete));
 
 app.use(function(err, req, res, next) {
 	var status = err.code || 500;
