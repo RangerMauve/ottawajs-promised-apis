@@ -11,7 +11,7 @@ var api = (function() {
 	api.host = "";
 
 	threads.list = function(page, limit) {
-		return u.get("/list", {
+		return u.get("thread/list", {
 			page: page,
 			limit: limit
 		});

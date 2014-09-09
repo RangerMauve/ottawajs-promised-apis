@@ -5,6 +5,14 @@ var app = express();
 var api = require("./api");
 var port = process.env.PORT || 21337;
 
+app.use(function(req, res, next) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "X-Requested-With");
+	res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+	res.header('Access-Control-Allow-Headers', 'Content-Type');
+	next();
+})
+
 app.use(require("body-parser")({
 	extended: false
 }));
@@ -13,7 +21,7 @@ app.get("/thread/list", bind_api(api.threads.list));
 app.get("/thread/list/:page", bind_api(api.threads.list));
 app.get("/thread/:id", bind_api(api.threads.read));
 app.get("/thread/:id/full", bind_api(api.threads.read.full));
-app.post("/thread", bind_api(api.threads.create));tee
+app.post("/thread", bind_api(api.threads.create));
 app.delete("/thread/:id", bind_api(api.threads.delete));
 
 app.get("/thread/:thread/comments", bind_api(api.comments.list));
@@ -24,6 +32,7 @@ app.put("/comment/:id", bind_api(api.comments.update));
 app.delete("/comment/:id", bind_api(api.comments.delete));
 
 app.use(function(err, req, res, next) {
+	console.log(err);
 	var status = err.code || 500;
 	var message = "Server Error";
 	if (err.code) {
@@ -34,12 +43,6 @@ app.use(function(err, req, res, next) {
 		message: message
 	});
 })
-
-app.use(function(req, res, next) {
-	res.status(404).json({
-		message: "Not Found"
-	});
-});
 
 console.log("Starting server on port", port);
 app.listen(port);

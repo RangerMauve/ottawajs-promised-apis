@@ -20,6 +20,7 @@ threads.list = function(page, limit) {
 			_id: true,
 			user: true,
 			title: true,
+			content: true,
 			updated_at: true
 		}).sort({
 			updated_at: -1
@@ -48,9 +49,9 @@ threads.read = function(id) {
 }
 
 threads.read.full = function(id) {
-	return Promise.all([threads.read(id), comments.read.list(id)]).then(function(results) {
+	return Promise.all([threads.read(id), comments.list(id)]).then(function(results) {
 		results[0].comments = results[1];
-		return results;
+		return results[0];
 	});
 }
 
@@ -87,7 +88,7 @@ comments.list = function(thread, page, limit) {
 			thread: thread
 		}, {
 			user: true,
-			title: true,
+			content: true,
 			updated_at: true,
 			_id: true
 		}).sort({

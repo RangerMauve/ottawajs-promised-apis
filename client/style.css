@@ -1,0 +1,42 @@
+html {
+	background: #FDFDFD;
+	font-family: Helvetica;
+}
+body {
+	max-width: 600px;
+	margin: 0px auto;
+}
+article,
+fieldset,
+form {
+	position: relative;
+	background: #FEFEFE;
+	margin: 20px auto;
+	border: none;
+	padding: 20px;
+	box-shadow: 0px 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+button {
+	background: #FFF;
+	margin: 2px;
+	border: none;
+	box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.3);
+}
+button.delete {
+	position: absolute;
+	right: 20px;
+	top: 20px;
+}
+button:hover {
+	box-shadow: 0px 0px 1px 2px rgba(60, 60, 255, 0.3);
+}
+.input-set label {
+	display: block;
+}
+.input-set *:not(label) {
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+	box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, 0.3);
+	padding: 3px;
+}

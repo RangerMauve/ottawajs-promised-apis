@@ -22,6 +22,6 @@
   "dependencies": {
     "superagent": "~0.18.2",
     "es6-promise": "~1.0.0",
-    "mustache.js": "~0.8.2"
+    "rivets": "~0.6.10"
   }
 }

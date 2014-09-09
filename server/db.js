@@ -1,7 +1,7 @@
 var Db = require("tingodb")().Db;
 var path = require("path");
 
-var db = new Db(path.join(__dirname, "comments.db"), {});
+var db = new Db(__dirname, {});
 
 var Comments = db.collection("comments");
 var Threads = db.collection("threads");
