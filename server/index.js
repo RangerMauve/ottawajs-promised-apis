@@ -33,6 +33,7 @@ app.delete("/comment/:id", bind_api(api.comments.delete));
 
 app.use(function(err, req, res, next) {
 	console.log(err);
+	console.log(err.stack)
 	var status = err.code || 500;
 	var message = "Server Error";
 	if (err.code) {
@@ -42,7 +43,9 @@ app.use(function(err, req, res, next) {
 	res.status(status).json({
 		message: message
 	});
-})
+});
+
+app.use("/files",express.static(require("path").join(__dirname,"../")));
 
 console.log("Starting server on port", port);
 app.listen(port);
