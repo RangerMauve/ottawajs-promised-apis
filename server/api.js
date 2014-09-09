@@ -64,7 +64,7 @@ threads.create = function(user, title, content) {
 			updated_at: new Date()
 		}, function(err, result) {
 			if (err) reject(err);
-			else resolve(result);
+			else resolve(result[0]);
 		})
 	})
 }

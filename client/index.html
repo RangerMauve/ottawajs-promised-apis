@@ -4,7 +4,7 @@
 <h1>CRUD Chat</h1>
 <section rv-show="view | is list">
 	<h2>Threads <button rv-on-click="view_create">Create</button></h2>
-	<article class="thread" rv-each-thread="threads" rv-data-id="thread._id" rv-on-click="load_thread">
+	<article class="thread thread-list-item" rv-each-thread="threads" rv-data-id="thread._id" rv-on-click="load_thread">
 		<h3 class="thread-title">{thread.title} <small>by {thread.user}</small></h3>
 		<p>{thread.content}</p>
 	</article>
@@ -28,28 +28,34 @@
 	</form>
 </section>
 <section rv-show="view | is thread">
-	<h2>{thread.title} <button rv-on-click="view_list">Back</button></h2>
-	<fieldset>
-		<legend>{thread.user}</legend>
-		<p>{thread.content}</p>
-	</fieldset>
-	<fieldset rv-each-comment="thread.comments">
-		<legend>by {comment.user}</legend>
-		<button class="delete" rv-on-click="delete_comment" rv-data-id="comment._id">X</button>
-		<p>{comment.content}</p>
-	</fieldset>
-	<form rv-on-submit="create_comment">
-		<div class="input-set">
-			<label>Name:</label>
-			<input rv-value="user">
-		</div>
-		<div class="input-set">
-			<label>Content:</label>
-			<textarea rv-value="new_comment"></textarea>
-		</div>
-		<button>Comment</button>
-	</form>
-	</form>
+	<article class="thread">
+		<h2>{thread.title} <button rv-on-click="view_list">Back</button></h2>
+		<fieldset>
+			<legend class="user-name">{thread.user}:</legend>
+			<p>{thread.content}</p>
+			<div class="controls">
+				<button rv-on-click="delete_thread" rv-data-id="thread._id">X</button>
+			</div>
+		</fieldset>
+		<fieldset rv-each-comment="thread.comments">
+			<legend class="user-name">{comment.user}:</legend>
+			<p>{comment.content}</p>
+			<div class="controls">
+				<button rv-on-click="delete_comment" rv-data-id="comment._id">X</button>
+			</div>
+		</fieldset>
+		<form rv-on-submit="create_comment">
+			<div class="input-set">
+				<label>Name:</label>
+				<input rv-value="user">
+			</div>
+			<div class="input-set">
+				<label>Content:</label>
+				<textarea rv-value="new_comment"></textarea>
+			</div>
+			<button>Comment</button>
+		</form>
+	</article>
 </section>
 <script src="bower_components/es6-promise/promise.min.js"></script>
 <script src="bower_components/superagent/superagent.js"></script>

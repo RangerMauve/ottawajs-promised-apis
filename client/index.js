@@ -14,7 +14,7 @@ var app = {
 }
 
 app.create_thread = function(e) {
-	if (e) e.preventDefault();
+	if (e && e.preventDefault) e.preventDefault();
 	var user = app.user;
 	var title = app.new_thread_title;
 	var content = app.new_thread_content;
@@ -24,8 +24,14 @@ app.create_thread = function(e) {
 		.catch(alert_error);
 }
 
+app.delete_thread = function(e) {
+	if (e && e.preventDefault) e.preventDefault();
+	var id = this.dataset.id;
+	api.threads.delete(id).then(app.view_list).catch(alert_error);
+}
+
 app.create_comment = function(e) {
-	if (e) e.preventDefault();
+	if (e && e.preventDefault) e.preventDefault();
 	var user = app.user;
 	var thread = app.thread._id;
 	var content = app.new_comment;
@@ -33,15 +39,15 @@ app.create_comment = function(e) {
 }
 
 app.delete_comment = function(e) {
-	if (e) e.preventDefault();
+	if (e && e.preventDefault) e.preventDefault();
 	var id = this.dataset.id;
 	api.comments.delete(id).then(app.load_comments).catch(alert_error);
 }
 
 app.load_threads = function(e) {
-	if (e) e.preventDefault();
+	if (e && e.preventDefault) e.preventDefault();
 	var page = app.page;
-	api.threads.list(page).then(function(threads) {
+	return api.threads.list(page).then(function(threads) {
 		app.threads = threads;
 	});
 }
@@ -56,7 +62,9 @@ app.load_comments = function() {
 
 
 app.load_thread = function(id) {
-	if (this && this.dataset) id = this.dataset.id || id;
+	if (this && this.dataset) {
+		id = this.dataset.id || id;
+	}
 	return api.threads.read.full(id).then(function(thread) {
 		app.thread = thread;
 		app.view_thread();
@@ -65,17 +73,18 @@ app.load_thread = function(id) {
 }
 
 app.view_create = function(e) {
-	if (e) e.preventDefault();
+	if (e && e.preventDefault) e.preventDefault();
 	app.view = "create";
 }
 
 app.view_list = function(e) {
-	if (e) e.preventDefault();
-	app.view = "list"
+	if (e && e.preventDefault) e.preventDefault();
+	app.view = "list";
+	app.load_threads().catch(alert_error);
 }
 
 app.view_thread = function(e) {
-	if (e) e.preventDefault();
+	if (e && e.preventDefault) e.preventDefault();
 	app.view = "thread";
 }
 
@@ -96,6 +105,7 @@ function alert_error(e) {
 
 function fetch(key) {
 	return function(object) {
+		console.log("Getting", key, "from", object);
 		return object[key];
 	}
 }
