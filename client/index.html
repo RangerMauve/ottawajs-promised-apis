@@ -34,14 +34,16 @@
 			<legend class="user-name">{thread.user}:</legend>
 			<p>{thread.content}</p>
 			<div class="controls">
-				<button rv-on-click="delete_thread" rv-data-id="thread._id">X</button>
+				<button title="edit">✎</button>
+				<button title="Remove" rv-on-click="delete_thread" rv-data-id="thread._id">X</button>
 			</div>
 		</fieldset>
 		<fieldset rv-each-comment="thread.comments">
 			<legend class="user-name">{comment.user}:</legend>
 			<p>{comment.content}</p>
 			<div class="controls">
-				<button rv-on-click="delete_comment" rv-data-id="comment._id">X</button>
+				<button title="edit">✎</button>
+				<button title="Remove" rv-on-click="delete_comment" rv-data-id="comment._id">X</button>
 			</div>
 		</fieldset>
 		<form rv-on-submit="create_comment">
