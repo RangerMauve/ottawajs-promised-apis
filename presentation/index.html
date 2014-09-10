@@ -639,13 +639,12 @@ Call it CRUD Chat.</p>
 </section>
   </div>
   <div class="slide hidden -" id="slide-16">
-    <section class="slide-content"><h3 id="create-api-object">Create API object</h3>
-<pre><code class="lang-javascript"><span class="comment">// Wrap in Closure</span>
-api = {};
+    <section class="slide-content"><h3 id="create-api-module">Create API module</h3>
+<pre><code class="lang-javascript">(<span class="keyword">function</span>(exports){
 <span class="keyword">var</span> threads = {};
 <span class="keyword">var</span> comments = {};
-api.threads = {};
-api.comments = {};
+exports.threads = {};
+exports.comments = {};
 
 threads.list = <span class="keyword">function</span>(page, limit) {
     <span class="keyword">return</span> u.get(<span class="string">"thread/list"</span>, {
@@ -663,7 +662,7 @@ comments.create = <span class="keyword">function</span>(thread, user, content) {
     });
 }
 
-retrun api;</code></pre>
+})(<span class="keyword">typeof</span> module !== <span class="string">"undefined"</span> ? exports : (window.api = {}));</code></pre>
 </section>
   </div>
   <div class="slide hidden -" id="slide-17">

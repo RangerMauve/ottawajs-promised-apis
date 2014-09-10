@@ -208,15 +208,14 @@ var u = ["get", "post", "put", "del"].reduce(function(res, verb) {
 
 ---
 
-### Create API object
+### Create API module
 
 ``` javascript
-// Wrap in Closure
-api = {};
+(function(exports){
 var threads = {};
 var comments = {};
-api.threads = {};
-api.comments = {};
+exports.threads = {};
+exports.comments = {};
 
 threads.list = function(page, limit) {
 	return u.get("thread/list", {
@@ -234,7 +233,7 @@ comments.create = function(thread, user, content) {
 	});
 }
 
-retrun api;
+})(typeof module !== "undefined" ? exports : (window.api = {}));
 ```
 
 ---
