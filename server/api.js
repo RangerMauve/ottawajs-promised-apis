@@ -135,8 +135,10 @@ comments.update = function(id, content) {
 		Comments.update({
 			_id: id
 		}, {
-			content: content,
-			updated_at: new Date()
+			$set: {
+				content: content,
+				updated_at: new Date()
+			}
 		}, function(err, updated) {
 			if (err) reject(err);
 			if (!updated) reject(new Error(id + " Not Found!"));

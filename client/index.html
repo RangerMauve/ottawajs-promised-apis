@@ -40,11 +40,18 @@
 		</fieldset>
 		<fieldset rv-each-comment="thread.comments">
 			<legend class="user-name">{comment.user}:</legend>
-			<p>{comment.content}</p>
+			<p rv-show="comment.editing | not">{comment.content}</p>
 			<div class="controls">
-				<button title="edit">✎</button>
+				<button title="edit" rv-on-click="edit_comment" rv-data-id="comment._id">✎</button>
 				<button title="Remove" rv-on-click="delete_comment" rv-data-id="comment._id">X</button>
 			</div>
+			<form rv-if="comment.editing" rv-on-submit="update_comment">
+				<div class="input-set">
+					<label>New Content</label>
+					<input rv-value="comment.new_content">
+				</div>
+				<button>Save</button>
+			</form>
 		</fieldset>
 		<form rv-on-submit="create_comment">
 			<div class="input-set">

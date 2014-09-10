@@ -7,6 +7,8 @@ var app = {
 	new_thread_title: "",
 	new_thread_content: "",
 	new_comment: "",
+	new_content: "",
+	edit_id: "",
 	thread: {},
 	threads: [],
 	page: 0,
@@ -42,6 +44,30 @@ app.delete_comment = function(e) {
 	if (e && e.preventDefault) e.preventDefault();
 	var id = this.dataset.id;
 	api.comments.delete(id).then(app.load_comments).catch(alert_error);
+}
+
+app.edit_comment = function(e){
+	if(e) e.preventDefault();
+	var id = this.dataset.id;
+	var comment = app.thread.comments.reduce(function(res,cur){
+		if(res) return res;
+		console.log(cur._id);
+		if(cur._id === id) return cur;
+	});
+	if(comment) {
+		comment.editing = true;
+		comment.new_content = comment.content;
+		app.editing = comment;
+	}
+}
+
+app.update_comment = function(e){
+	if(e) e.preventDefault();
+	var id = app.editing._id;
+	var content = app.editing.new_content;
+	api.comments.update(id,content).then(app.load_comments).then(app.view_thread).then(function(){
+		app.editing = {};
+	}).catch(alert_error);
 }
 
 app.load_threads = function(e) {
@@ -90,6 +116,10 @@ app.view_thread = function(e) {
 
 rivets.formatters.is = function(value, arg) {
 	return ("" + value) === arg;
+}
+
+rivets.formatters.not = function(value){
+	return !value;
 }
 
 rivets.bind(document.body, app);
