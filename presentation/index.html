@@ -392,6 +392,19 @@ pre .chunk {
   color: #aaa
 }
 
+td {
+	border-top: 1px solid black;
+}
+td:first-child {
+	border-right: 1px solid black;
+}
+
+iframe {
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	height: 600px;
+}
 
   </style>
 </head>
@@ -400,9 +413,299 @@ pre .chunk {
     <div class="progress-bar"></div>
   </div>
 
-  <div class="slide" id="slide-1">
+  <div class="slide " id="slide-1">
     <section class="slide-content"><h1 id="promised-apis">Promised APIs</h1>
 <h2 id="turning-your-server-s-http-api-into-a-clean-promise-based-library-">Turning your server&#39;s HTTP API into a clean Promise-based library.</h2>
+</section>
+  </div>
+  <div class="slide hidden " id="slide-2">
+    <section class="slide-content"><h3 id="ajax-spaghetti">AJAX Spaghetti</h3>
+<p>Performing multiple requests can be messy</p>
+<pre><code class="lang-javascript">$(<span class="string">"#my_button"</span>).click(<span class="keyword">function</span>(){
+    $.post(<span class="string">"foo/bar"</span>,
+    {
+        hello: <span class="string">"Is it me you're looking for?"</span>
+    },
+    success: <span class="keyword">function</span>(data){
+        $(<span class="string">"body"</span>).load(<span class="string">"/foo/bar/"</span>+data.id,<span class="keyword">function</span>(){
+            <span class="keyword">if</span>(status === <span class="string">"error"</span>)
+                $(<span class="string">"#error_thing"</span>).text(<span class="string">"Error loading!"</span>);
+        })
+    }
+    error: <span class="keyword">function</span>(xhr,status,error){
+        $(<span class="string">"#error_thing"</span>).text(<span class="string">"Error posting!"</span>);
+    });
+});</code></pre>
+</section>
+  </div>
+  <div class="slide hidden " id="slide-3">
+    <section class="slide-content"><h3 id="some-problems">Some problems</h3>
+<ul>
+<li>Requests strewn throughout code</li>
+<li>If a URL changes, all instances need to be found and changed</li>
+<li>Less DRY because request code is repeated <code>$.post(&quot;foo/bar/&quot;,function(data,status){/* etc*/})</code></li>
+<li>Error handling can be tricky</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden " id="slide-4">
+    <section class="slide-content"><h3 id="what-are-some-alternatives-">What are some alternatives?</h3>
+<ul>
+<li>Use client side models</li>
+<li>Let X framework handle all data</li>
+<li><strong>Create your own abstraction over the HTTP api</strong></li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden " id="slide-5">
+    <section class="slide-content"><h3 id="advantages-in-house-abstraction">Advantages in-house abstraction</h3>
+<ul>
+<li>More control over the code</li>
+<li>Can re-use regardless of framework</li>
+<li>Fancy</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden " id="slide-6">
+    <section class="slide-content"><h3 id="why-promises-">Why promises?</h3>
+<ul>
+<li>Handle both synchronous and asynchronous flow</li>
+<li>Part of ES6 standard and supported natively</li>
+<li>Allow for a more functional approach</li>
+<li>Chaining allows you to handle errors in one place</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden " id="slide-7">
+    <section class="slide-content"><h3 id="promise-states">Promise states</h3>
+<p>Promises can be fulfilled or rejected. The flow goes through 3 states.</p>
+<p><em>Pending</em>: Value not yet available, can transition</p>
+<p><em>Fulfilled</em>: Promise was successful and now has a value</p>
+<p><em>Rejected</em>: An error occurred and the promise now has an error value</p>
+</section>
+  </div>
+  <div class="slide hidden " id="slide-8">
+    <section class="slide-content"><h3 id="api">API</h3>
+<p><code>new Promise(function(fulfill,reject))</code></p>
+<p><code>Promise.all([Promise])</code>
+    Construct a new promise</p>
+<p><code>Promise.reject(value)</code>
+    Create a rejected promise</p>
+<p><code>Promise.resolve(value)</code>
+    Create a fulfilled promise</p>
+<p><code>promise.then([success],[error])</code>
+    Continue the chain</p>
+<p><code>promie.catch()</code>
+    Catch any errors that occurred</p>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-9">
+    <section class="slide-content"><h3 id="example">Example</h3>
+<p>All functions in the chain get put within try-catch blocks so every error is caught</p>
+<pre><code class="lang-javascript">document.querySelector(<span class="string">"#my_button"</span>).addEventListener(<span class="string">"click"</span>,<span class="keyword">function</span>(){
+    xhr.post(<span class="string">"/foo/bar"</span>)
+        .then(fetch_prop(<span class="string">"id"</span>))
+        .then(load_foo)
+        .<span class="keyword">catch</span>(<span class="keyword">function</span>(err){
+            alert(<span class="string">"An error occured!"</span>);
+        });
+})
+
+<span class="function"><span class="keyword">function</span> <span class="title">load_foo</span><span class="params">(id)</span>{</span>
+    <span class="keyword">return</span> xhr.get(<span class="string">"/foo/bar/"</span>+id).then(<span class="keyword">function</span>(page){
+        document.body.innerHTML = page;
+    });
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">fetch_prop</span><span class="params">(name)</span>{</span>
+    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="params">(object)</span> {</span>
+        <span class="keyword">return</span> object[name];
+    }
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-10">
+    <section class="slide-content"><h3 id="how-will-this-work-with-your-api-">How will this work with your API?</h3>
+<ul>
+<li>API functions will return a promise</li>
+<li>Requests can be chained together with other functions</li>
+<li>Interaction with HTTP will be wrapped by a Promise</li>
+<li>Data endpoints will be represented as <code>api.resource.action</code></li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-11">
+    <section class="slide-content"><h3 id="example-application">Example application</h3>
+<p>A SPA with CRUD, Create-Read-Update-Delete, operations.
+Have a list of threads and allow for comments on the threads.
+Call it CRUD Chat.</p>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-12">
+    <section class="slide-content"><h3 id="define-your-resources-and-actions">Define your resources and actions</h3>
+<ul>
+<li>Threads<ul>
+<li>Can be created, read, and removed</li>
+</ul>
+</li>
+<li>Comments<ul>
+<li>Belong to Threads</li>
+<li>Can be read along with thread data</li>
+<li>Can be read page by page</li>
+<li>Can be edited by users</li>
+<li>Can be removed</li>
+</ul>
+</li>
+</ul>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-13">
+    <section class="slide-content"><h3 id="api-threads">API - Threads</h3>
+<table>
+<thead>
+<tr>
+<th>Client</th>
+<th>Server</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>threads.list (page,limit)</td>
+<td>GET /thread/list {page,limit}</td>
+</tr>
+<tr>
+<td>threads.read (id)</td>
+<td>GET /thread/:id</td>
+</tr>
+<tr>
+<td>threads.create (user,title,content)</td>
+<td>POST /thread {user,title,content}</td>
+</tr>
+<tr>
+<td>threads.delete (id)</td>
+<td>DELETE /thread/:id</td>
+</tr>
+</tbody>
+</table>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-14">
+    <section class="slide-content"><h3 id="api-comments">API - Comments</h3>
+<table>
+<thead>
+<tr>
+<th>Client</th>
+<th>Server</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>comments.list (thread,page,limit)</td>
+<td>GET /thread/:thread/comments/:page {limit}</td>
+</tr>
+<tr>
+<td>comments.create (thread,user,content)</td>
+<td>POST /thread/:thread/comments {user,conten}</td>
+</tr>
+<tr>
+<td>comments.update (id,content)</td>
+<td>PUT /comment/:id {content}</td>
+</tr>
+<tr>
+<td>comments.delete (id)</td>
+<td>DELETE /comment/:id</td>
+</tr>
+</tbody>
+</table>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-15">
+    <section class="slide-content"><h3 id="wrapping-over-superagent-for-http">Wrapping over Superagent for HTTP</h3>
+<pre><code class="lang-javascript"><span class="function"><span class="keyword">function</span> <span class="title">request</span><span class="params">(verb, path, data)</span> {</span>
+    <span class="keyword">if</span> (path[<span class="number">0</span>] !== <span class="string">"/"</span>) path = (<span class="string">"/"</span> + path);
+    <span class="keyword">if</span> (!data) data = {};
+    <span class="keyword">return</span> <span class="keyword">new</span> Promise(<span class="keyword">function</span>(resolve, reject) {
+        superagent[verb](api.host + path).send(data).end(<span class="keyword">function</span>(res) {
+            <span class="keyword">if</span> (res.error) reject(res.body);
+            <span class="keyword">else</span> resolve(res.body);
+        });
+    });
+}
+
+<span class="keyword">var</span> u = [<span class="string">"get"</span>, <span class="string">"post"</span>, <span class="string">"put"</span>, <span class="string">"del"</span>].reduce(<span class="keyword">function</span>(res, verb) {
+    res[verb] = request.bind(<span class="literal">null</span>, verb);
+    <span class="keyword">return</span> res;
+}, {});</code></pre>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-16">
+    <section class="slide-content"><h3 id="create-api-object">Create API object</h3>
+<pre><code class="lang-javascript"><span class="comment">// Wrap in Closure</span>
+api = {};
+<span class="keyword">var</span> threads = {};
+<span class="keyword">var</span> comments = {};
+api.threads = {};
+api.comments = {};
+
+threads.list = <span class="keyword">function</span>(page, limit) {
+    <span class="keyword">return</span> u.get(<span class="string">"thread/list"</span>, {
+        page: page,
+        limit: limit
+    });
+}
+
+<span class="comment">// ETC</span>
+
+comments.create = <span class="keyword">function</span>(thread, user, content) {
+    <span class="keyword">return</span> u.post(<span class="string">"/thread/"</span> + thread + <span class="string">"/comments"</span>, {
+        user: user,
+        content: content
+    });
+}
+
+retrun api;</code></pre>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-17">
+    <section class="slide-content"><h3 id="use-it">Use it</h3>
+<pre><code class="lang-javascript">events = <span class="keyword">new</span> EventEmitter();
+
+api.threads.list(<span class="number">0</span>,<span class="number">10</span>)
+    .then(pass_through(render_threads))
+    .then(bind_thread_listeners);
+    .<span class="keyword">catch</span>(alert);
+
+<span class="function"><span class="keyword">function</span> <span class="title">view_thread</span><span class="params">(id)</span>{</span>
+    api.threads.read(id)
+        .then(render_thread)
+        .<span class="keyword">catch</span>(alert);
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">pass_through</span><span class="params">(fn)</span>{</span>
+    <span class="keyword">return</span> <span class="keyword">function</span>(data){
+        <span class="keyword">return</span> Promise.resolve(data)
+            .then(fn)
+            .then(<span class="keyword">function</span>(){
+                <span class="keyword">return</span> data;
+            });
+    }
+}</code></pre>
+</section>
+  </div>
+  <div class="slide hidden -" id="slide-18">
+    <section class="slide-content"><h3 id="result">Result</h3>
+<iframe src="/files/client"></iframe></section>
+  </div>
+  <div class="slide hidden" id="slide-19">
+    <section class="slide-content"><div class="author">
+  <h1 class="name">Georgiy S.</h1>
+    <h3 class="twitter">
+      <a href="http://twitter.com/@LoneMauve">@LoneMauve</a>
+    </h3>
+    <h3 class="url">
+      <a href="https://github.com/RangerMauve">https://github.com/RangerMauve</a>
+    </h3>
+</div>
 </section>
   </div>
 
