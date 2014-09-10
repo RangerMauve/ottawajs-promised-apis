@@ -671,22 +671,27 @@ comments.create = <span class="keyword">function</span>(thread, user, content) {
 
 api.threads.list(<span class="number">0</span>,<span class="number">10</span>)
     .then(pass_through(render_threads))
-    .then(bind_thread_listeners);
-    .<span class="keyword">catch</span>(alert);
+    .then(bind_thread_listeners).<span class="keyword">catch</span>(alert);
 
 <span class="function"><span class="keyword">function</span> <span class="title">view_thread</span><span class="params">(id)</span>{</span>
-    api.threads.read(id)
-        .then(render_thread)
-        .<span class="keyword">catch</span>(alert);
+    api.threads.read(id).then(render_thread).<span class="keyword">catch</span>(alert);
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">render_threads</span><span class="params">(threads)</span> {</span>
+    document.body.innerHTML = threads.map(mustache.render.bind(mustache,<span class="string">"thread.mustache"</span>)).join(<span class="string">""</span>)
+}
+
+<span class="function"><span class="keyword">function</span> <span class="title">bind_thread_listeners</span><span class="params">(threads)</span>{</span>
+    threads.forEach(<span class="keyword">function</span>(t){
+        document.getElementById(<span class="string">"thread-"</span>+t._id).onclick = view_thread.bind(<span class="literal">null</span>,t._id);
+    });
 }
 
 <span class="function"><span class="keyword">function</span> <span class="title">pass_through</span><span class="params">(fn)</span>{</span>
     <span class="keyword">return</span> <span class="keyword">function</span>(data){
-        <span class="keyword">return</span> Promise.resolve(data)
-            .then(fn)
-            .then(<span class="keyword">function</span>(){
-                <span class="keyword">return</span> data;
-            });
+        <span class="keyword">return</span> Promise.resolve(data).then(fn).then(<span class="keyword">function</span>(){
+            <span class="keyword">return</span> data;
+        });
     }
 }</code></pre>
 </section>

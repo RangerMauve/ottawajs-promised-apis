@@ -245,23 +245,28 @@ events = new EventEmitter();
 
 api.threads.list(0,10)
 	.then(pass_through(render_threads))
-	.then(bind_thread_listeners);
-	.catch(alert);
+	.then(bind_thread_listeners).catch(alert);
 
 function view_thread(id){
-	api.threads.read(id)
-		.then(render_thread)
-		.catch(alert);
+	api.threads.read(id).then(render_thread).catch(alert);
+}
+
+function render_threads(threads) {
+    document.body.innerHTML = threads.map(mustache.render.bind(mustache,"thread.mustache")).join("")
+}
+
+function bind_thread_listeners(threads){
+    threads.forEach(function(t){
+        document.getElementById("thread-"+t._id).onclick = view_thread.bind(null,t._id);
+    });
 }
 
 function pass_through(fn){
 	return function(data){
-		return Promise.resolve(data)
-			.then(fn)
-			.then(function(){
-				return data;
-			});
-	}
+		return Promise.resolve(data).then(fn).then(function(){
+			return data;
+		});
+    }
 }
 ```
 
